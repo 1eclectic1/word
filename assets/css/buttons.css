@@ -1,0 +1,93 @@
+/* buttons.css - Action buttons */
+
+.control-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.action-btn {
+    background-color: var(--color-muted);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.action-btn.submit {
+    background-color: var(--color-green);
+}
+
+.action-btn.submit:hover {
+    background-color: var(--color-green-dark);
+}
+
+.action-btn.clear {
+    background-color: var(--color-green);
+}
+
+.action-btn.clear:hover {
+    background-color: var(--color-green-dark);
+}
+
+.action-btn.back-to-game {
+    background-color: var(--color-muted);
+}
+
+.action-btn.back-to-game:hover {
+    background-color: #6c6e70;
+}
+/* ==========================================================================
+   Suggestions Visibility Toggle Button
+   ========================================================================== */
+
+/* Container positioning for the button */
+.suggestions-toggle-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+/* Base Push Button Stylings matching Wordle Themes */
+.toggle-btn {
+    background-color: #6aaa64; /* Wordle Green */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.toggle-btn:hover {
+    background-color: #538d4e;
+}
+
+/* Active depression state click animation */
+.toggle-btn:active {
+    transform: scale(0.97);
+}
+
+/* UI State when Panel is Hiding */
+.toggle-btn.btn-disabled {
+    background-color: #787c7e; /* Wordle Gray */
+}
+
+.toggle-btn.btn-disabled:hover {
+    background-color: #616467;
+}
+

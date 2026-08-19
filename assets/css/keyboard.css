@@ -1,0 +1,63 @@
+/* keyboard.css - Virtual keyboard */
+
+.keyboard-container {
+    margin: 20px auto;
+    width: 100%;
+    max-width: 500px;
+    box-sizing: border-box;
+    padding: 0 4px;
+}
+
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 6px;
+    touch-action: manipulation;
+    width: 100%;
+}
+
+.key {
+    cursor: pointer;
+    background-color: var(--color-key);
+    color: #000000;
+    font-weight: bold;
+    border-radius: 4px;
+    padding: 14px 0;
+    margin: 0 2px;
+    flex: 0 0 calc(10% - 4px);
+    text-align: center;
+    font-size: 1.1rem;
+    user-select: none;
+    text-transform: uppercase;
+    box-sizing: border-box;
+}
+
+.keyboard-spacer {
+    flex: 0 0 calc(5% - 4px);
+    margin: 0 2px;
+}
+
+/* Key state colors */
+.key.key-green {
+    background-color: var(--color-green);
+    color: #ffffff;
+}
+
+.key.key-yellow {
+    background-color: var(--color-yellow);
+    color: #ffffff;
+}
+
+.key.key-gray {
+    background-color: var(--color-gray);
+    color: #ffffff;
+    opacity: 0.4;
+}
+
+/* Enter / Delete keys */
+.key.key-action {
+    flex: 0 0 calc(15% - 4px) !important;
+    font-size: 0.75rem;
+    padding: 16px 0;
+}
+

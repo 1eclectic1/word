@@ -1,0 +1,15 @@
+# Ignore local runtime database assets
+data/telemetry.sqlite
+
+# Ignore session runtime artifacts or local configurations
+config.php
+backup/
+
+# Ignore core OS file tags
+.DS_Store
+
+# temp hide rank engine
+src/
+
+data/
+

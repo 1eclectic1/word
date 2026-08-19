@@ -1,0 +1,77 @@
+/* Telemetry Stats Card Styles */
+.stats-card {
+    background-color: #ffffff;
+    border: 3px solid #000000;
+    padding: 1.5rem;
+    margin: 2.5rem auto 1.5rem auto;
+    max-width: 450px;
+    box-shadow: 4px 4px 0px #000000;
+}
+.stats-card h3, .stats-card h4 {
+    margin-top: 0;
+    color: #000000;
+    font-weight: 900;
+}
+.stats-meta {
+    font-size: 1.1rem;
+    color: #1a202c;
+    margin-bottom: 1.25rem;
+    border-bottom: 2px dashed #000000;
+    padding-bottom: 0.5rem;
+}
+.chart-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+.row-label {
+    width: 20px;
+    font-size: 1.1rem;
+    font-weight: 900;
+    color: #000000;
+    text-align: center;
+}
+.bar-track {
+    flex-grow: 1;
+    background-color: #f7fafc;
+    height: 26px;
+    border: 1px solid #000000;
+    margin-left: 0.75rem;
+}
+.bar-fill {
+    background-color: #4a5568; /* Charcoal fallback fill colors */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 0.5rem;
+    transition: width 0.5s ease-out;
+}
+.active-row .bar-fill {
+    background-color: #2b6cb0; /* Vibrant high-contrast blue for the exact row they just hit! */
+}
+.inside-count {
+    color: #ffffff;
+    font-size: 0.95rem;
+    font-weight: 900;
+}
+.system-benchmark-panel {
+    background-color: #edf2f7;
+    border: 1px solid #cbd5e0;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    font-size: 1rem;
+}
+.system-benchmark-panel p {
+    margin: 0.25rem 0;
+}
+.benchmark-badge {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-weight: bold;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+.benchmark-badge.superior { color: #22543d; background-color: #c6f6d5; }
+.benchmark-badge.trailing { color: #744210; background-color: #fefcbf; }
+

@@ -1,0 +1,44 @@
+/* base.css - Reset, variables, global styles */
+
+:root {
+    --color-bg:          #121213;
+    --color-surface:     #1a1a1b;
+    --color-border:      #272729;
+    --color-text:        #ffffff;
+    --color-muted:       #818384;
+    --color-green:       #538d4e;
+    --color-green-dark:  #43723f;
+    --color-yellow:      #b59f3b;
+    --color-yellow-dark: #94812f;
+    --color-gray:        #3a3a3c;
+    --color-key:         #d3d6da;
+    --color-error-bg:    #781c1c;
+    --color-error-border:#992222;
+    --color-success-bg:  #1c5427;
+    --color-success-border:#227733;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Keeps scrollbar visible to prevent layout shift */
+html {
+    scroll-behavior: smooth;
+    /* --- ADD THIS LINE TO STABILIZE INTER-ELEMENT SCROLL JUMPS --- */
+    scroll-padding-top: 20px; 
+}
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    min-height: 100vh;
+}
+

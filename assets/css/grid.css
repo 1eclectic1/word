@@ -1,0 +1,109 @@
+/* grid.css - Word grid and letter boxes */
+
+.grid-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.word-row {
+    display: flex;
+    gap: 6px;
+}
+
+.letter-box {
+    width: 58px;
+    height: 58px;
+    border: 2px solid #3a3a3c;
+    background-color: transparent;
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    caret-color: transparent; /* Hides blinking text cursor */
+
+    /* --- ADD THESE 3 LINES TO FIX THE LIVE TYPING JUMP --- */
+    display: inline-block;
+    line-height: 54px;        /* Matches inner canvas box height precisely (58px - 4px borders) */
+    vertical-align: middle;   /* Hard-anchors text mapping to a static center axis line */
+}
+
+.letter-box:focus {
+    outline: none;
+    border-color: #565758;
+}
+
+/* Color states */
+.state-gray {
+    background-color: var(--color-gray) !important;
+    border-color: var(--color-gray) !important;
+}
+
+.state-yellow {
+    background-color: var(--color-yellow) !important;
+    border-color: var(--color-yellow) !important;
+}
+
+.state-green {
+    background-color: var(--color-green) !important;
+    border-color: var(--color-green) !important;
+}
+
+/* Prevent native mobile keyboard on readonly boxes */
+.letter-box[readonly] {
+    pointer-events: none;
+}
+.stats-card {
+    background-color: #ffffff;
+    border: 3px solid #000000;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    max-width: 480px;
+}
+.stats-meta {
+    font-size: 1.2rem;
+    color: #111111;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px dashed #000000;
+    padding-bottom: 0.5rem;
+}
+.chart-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.50rem;
+}
+.row-label {
+    width: 25px;
+    font-size: 1.2rem;
+    font-weight: 900;
+    color: #000000;
+}
+.bar-track {
+    flex-grow: 1;
+    background-color: #f7fafc;
+    height: 28px;
+    border: 1px solid #1a202c;
+    margin-left: 0.5rem;
+}
+.bar-fill {
+    background-color: #3182ce; /* Crisp structural layout primary blue */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 0.5rem;
+    transition: width 0.4s ease-out;
+}
+.active-row .bar-fill {
+    background-color: #004b93; /* Darker, high-contrast overlay highlighting current victory */
+}
+.inside-count {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 900;
+}
+
