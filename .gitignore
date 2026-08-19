@@ -2,7 +2,6 @@
 data/telemetry.sqlite
 
 # Ignore session runtime artifacts or local configurations
-config.php
 backup/
 
 # Ignore core OS file tags
@@ -10,6 +9,5 @@ backup/
 
 # temp hide rank engine
 src/
-
 data/
 
