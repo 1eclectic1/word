@@ -259,4 +259,13 @@ if (!defined('VIEWS_PATH')) { define('VIEWS_PATH', __DIR__ . '/views'); }
 // RENDER MAIN VIEW PLATFORM TEMPLATES
 // -------------------------------------------------------------------------
 // FIX: Ensure __DIR__ has double underscores here too!
+
+$helpText = '';
+if ($mode === 'help') {
+    $helpFile = __DIR__ . '/data/help.txt';
+    if (is_readable($helpFile)) {
+        $helpText = file_get_contents($helpFile);
+    }
+}
+
 require_once __DIR__ . '/views/layout.php'; 
