@@ -1,26 +1,36 @@
 <?php
 // src/controller-play.php
-// Note: This script assumes word-common.php and validation states are already loaded.
+declare(strict_types=1);
 
-init_wordle_session();
+global $engine, $secretWord, $userUid, $validationError, $dbError;
 
-// Standardize incoming guess key parameters from views/grid.php
-$rawGuess = $_POST['current-guess'] ?? $_POST['current_guess'] ?? null;
+// 1. Ingest Human Move
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['current-guess'])) {
+    $incomingGuess = strtolower(trim($_POST['current-guess']));
+    if (strlen($incomingGuess) === 5) {
+        if (!$engine->isValidWord($incomingGuess)) {
+            $validationError = "The word '" . strtoupper($incomingGuess) . "' is not in the dictionary list!";
+        } else {
+            process_board_colors($incomingGuess, $secretWord);
+        }
+    }
+}
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $rawGuess) {
-    if (validate_guess_format($rawGuess)) {
-        $cleanGuess = strtoupper(trim($rawGuess));
-        
-        // Compute turn offsets
-        $currentTurn = count($_SESSION['history']);
-        
-        if ($currentTurn < 6) {
-            // Placeholder: Call your engine or grid processor to generate color arrays
-            // Example structure:
-            // $_SESSION['history'][$currentTurn] = [
-            //     'word' => $cleanGuess,
-            //     'colors' => ['G', 'Y', 'X', 'X', 'G']
-            // ];
+// 2. Commit Telemetry if matches terminate
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['record_game_telemetry'])) {
+    $telSecret = strtolower(trim($_POST['secret_word'] ?? ''));
+    $gameOutcome = (($_POST['outcome'] ?? '') === 'win') ? 'win' : 'loss';
+    $turnsTaken = ($gameOutcome === 'win') ? (int)($_POST['turns_taken'] ?? 0) : 0;
+    
+    if (strlen($telSecret) === 5) {
+        try {
+            $db = new PDO('sqlite:' . __DIR__ . '/../data/telemetry.sqlite');
+            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $stmt = $db->prepare("INSERT INTO game_history (cookie_uid, secret_word, outcome, turns_taken) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$userUid, $telSecret, $gameOutcome, $turnsTaken]);
+            compile_telemetry_analytics($userUid); // Refresh state arrays
+        } catch (PDOException $e) {
+            $dbError = $e->getMessage();
         }
     }
 }
