@@ -8,6 +8,6 @@ backup/
 .DS_Store
 
 # temp hide rank engine
-src/
+src/wordle-learn-engine.php
 data/
 
