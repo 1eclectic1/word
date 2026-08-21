@@ -217,21 +217,31 @@ function submitIfComplete() {
         currentGuessInput.value = word;
     }
 
-    // Telemetry – ONLY in Learn mode
-    const currentMode = new URLSearchParams(window.location.search).get('mode') || 'learn';
-    if (currentMode === 'learn') {
-        const secretElement = document.getElementById('secret-word-display');
-        const secretWord = secretElement ? secretElement.textContent.trim().toLowerCase() : '';
-        const turnsCount = (document.querySelectorAll('.word-row .letter-box[readonly]').length / 5) + 1;
+// Telemetry – ONLY in Learn mode, and only once per finished game
+const currentMode = new URLSearchParams(window.location.search).get('mode') || 'learn';
+if (currentMode === 'learn') {
+    // Remove any previously injected telemetry fields so they cannot be re-sent
+    form.querySelectorAll('input[name="record_game_telemetry"], input[name="secret_word"], input[name="outcome"], input[name="turns_taken"]').forEach(el => {
+        // Keep the original permanent hidden fields that have empty/0 values
+        if (el.value === '' || el.value === '0') return;
+        el.remove();
+    });
 
-        if (secretWord && secretWord.length === 5) {
-            if (word === secretWord) {
-                injectTelemetryFields(secretWord, 'win', turnsCount);
-            } else if (turnsCount === 6) {
-                injectTelemetryFields(secretWord, 'loss', 0);
-            }
+    const secretElement = document.getElementById('secret-word-display');
+    const secretWord = secretElement ? secretElement.textContent.trim().toLowerCase() : '';
+
+    // Count how many rows already have letters (completed turns)
+    const completedRows = document.querySelectorAll('.word-row .letter-box[readonly]').length / 5;
+    const turnsCount = Math.floor(completedRows) + 1;
+
+    if (secretWord && secretWord.length === 5) {
+        if (word === secretWord) {
+            injectTelemetryFields(secretWord, 'win', turnsCount);
+        } else if (turnsCount >= 6) {
+            injectTelemetryFields(secretWord, 'loss', 0);
         }
     }
+}
 
     form.submit();   // ← this stays
 }
