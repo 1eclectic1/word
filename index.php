@@ -81,13 +81,21 @@ foreach ($_SESSION['history'] as $turn) {
 $currentRowIndex = count($_SESSION['history']);
 $turnsRemaining = 6 - $currentRowIndex;
 
-// 1. Only run win/loss notifications if we are NOT in Solve Mode
+// 1. Only run win/loss notifications (and telemetry) if we are NOT in Solve Mode
 if ($mode !== 'solve' && $currentRowIndex > 0) {
     $lastTurn = end($_SESSION['history']);
+
     if ($lastTurn['word'] === $secretWord) {
         $successMsg = "Outstanding! You cracked the word in " . $currentRowIndex . " guesses!";
+
+        // Record the win once
+        record_game_telemetry($userUid, $secretWord, 'win', $currentRowIndex);
+
     } elseif ($currentRowIndex >= 6) {
         $errorMsg = "Game Over! The secret word was: " . strtoupper($secretWord);
+
+        // Record the loss once
+        record_game_telemetry($userUid, $secretWord, 'loss', 0);
     }
 }
 

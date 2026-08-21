@@ -151,3 +151,28 @@ function process_board_colors(string $incomingGuess, string $secretWord): void {
     $_SESSION['word_learn_yellows'] = $yellows; $_SESSION['word_learn_grays'] = $grays;
 }
 
+function record_game_telemetry(string $userUid, string $secret, string $outcome, int $turnsTaken): void {
+    global $dbError;
+
+    // Never record the same secret twice for this user
+    try {
+        $db = new PDO('sqlite:' . __DIR__ . '/../data/telemetry.sqlite');
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $check = $db->prepare(
+            "SELECT COUNT(*) FROM game_history WHERE cookie_uid = ? AND secret_word = ?"
+        );
+        $check->execute([$userUid, $secret]);
+        if ((int)$check->fetchColumn() > 0) {
+            return; // already recorded
+        }
+
+        $stmt = $db->prepare(
+            "INSERT INTO game_history (cookie_uid, secret_word, outcome, turns_taken) VALUES (?, ?, ?, ?)"
+        );
+        $stmt->execute([$userUid, $secret, $outcome, $turnsTaken]);
+    } catch (PDOException $e) {
+        $dbError = $e->getMessage();
+    }
+}
+

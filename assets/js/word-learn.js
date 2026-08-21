@@ -246,26 +246,6 @@ if (currentMode === 'learn') {
     form.submit();   // ← this stays
 }
 
-function injectTelemetryFields(secret, outcome, turns) {
-    const form = document.getElementById('wordle-form');
-    if (!form) return;
-
-    const inputConfigs = [
-        { name: 'record_game_telemetry', value: '1' },
-        { name: 'secret_word', value: secret },
-        { name: 'outcome', value: outcome },
-        { name: 'turns_taken', value: turns.toString() }
-    ];
-
-    inputConfigs.forEach(cfg => {
-        const hiddenField = document.createElement('input');
-        hiddenField.type = 'hidden';
-        hiddenField.name = cfg.name;
-        hiddenField.value = cfg.value;
-        form.appendChild(hiddenField);
-    });
-}
-
 // Global reset helper (called from button)
 function triggerReset() {
     const actionInput = document.getElementById('form-action');
