@@ -1,0 +1,23 @@
+08:42:27 POST received. guess=[iratr]  history-before=0
+08:42:27 REJECT: not in dictionary
+08:42:42 POST received. guess=[irate]  history-before=0
+08:42:42 colors for turn 0 = gray,gray,gray,gray,gray
+08:42:42 SUCCESS. history-after=1
+08:43:36 POST received. guess=[souly]  history-before=1
+08:43:36 colors for turn 1 = yellow,gray,yellow,yellow,gray
+08:43:36 SUCCESS. history-after=2
+08:44:11 POST received. guess=[locus]  history-before=2
+08:44:11 colors for turn 2 = green,green,green,green,green
+08:44:11 ALL GREEN – marked as solved
+08:44:11 SUCCESS. history-after=3
+08:44:24 POST received. guess=[NULL]  history-before=0
+08:44:36 POST received. guess=[irate]  history-before=0
+08:44:36 colors for turn 0 = gray,gray,gray,gray,gray
+08:44:36 SUCCESS. history-after=1
+08:45:23 POST received. guess=[souly]  history-before=1
+08:45:23 colors for turn 1 = yellow,green,yellow,yellow,gray
+08:45:23 SUCCESS. history-after=2
+08:45:51 POST received. guess=[locus]  history-before=2
+08:45:51 colors for turn 2 = green,green,green,green,green
+08:45:51 ALL GREEN – marked as solved
+08:45:51 SUCCESS. history-after=3

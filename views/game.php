@@ -38,10 +38,9 @@ $isGameOver = (!empty($successMsg) || !empty($errorMsg));
         <?php if (!$isGameOver): ?>
             <button type="button" id="toggle-suggestions-btn" class="toggle-btn">Hide Suggestions</button>
             <?php if ($currentRowIndex < 6): ?>
-                <button type="submit" class="action-btn submit">
-                    <?= $mode === 'learn' ? 'Try' : 'Evaluate' ?>
-                </button>
-            <?php endif; ?>
+<button type="button" class="action-btn submit" onclick="submitIfComplete()">
+    <?= $mode === 'learn' ? 'Try' : 'Evaluate' ?>
+</button>            <?php endif; ?>
         <?php endif; ?>
     </div>
 </form>

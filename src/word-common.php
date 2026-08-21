@@ -47,6 +47,7 @@ function init_wordle_platform(): WordLearnEngine {
         $_SESSION['word_learn_greens'] = '.....';
         $_SESSION['word_learn_yellows'] = ['', '', '', '', ''];
         $_SESSION['word_learn_grays'] = '';
+        unset($_SESSION['solve_solved']);
         unset($_SESSION['word_learn_secret']);
         $fallbackMode = $_GET['mode'] ?? $_SESSION['word_learn_mode'] ?? 'learn';
         header('Location: index.php?mode=' . $fallbackMode);

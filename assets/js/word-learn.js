@@ -10,6 +10,19 @@ document.addEventListener('DOMContentLoaded', () => {
 	const form = document.getElementById('wordle-form');
 	if (!form) return; // Help mode has no form
 
+	// Always force the current guess into the hidden field before any submit
+	form.addEventListener('submit', (e) => {
+		const word = syncCurrentGuess();
+		if (word.length !== 5) {
+			e.preventDefault();
+			alert('Please enter a full 5-letter word.');
+			return;
+		}
+		if (document.body.dataset.solved === '1') {
+			e.preventDefault();
+			return;
+		}
+	});
 	const rows = document.querySelectorAll('.word-row');
 	const activeRowIndex = Array.from(rows).findIndex(row => {
 		return row.querySelector('.letter-box:not([readonly])') !== null;

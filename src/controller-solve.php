@@ -91,10 +91,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $incomingGuess !== null && $incomin
         solve_log('SUCCESS. history-after=' . count($_SESSION['history']));
     }
 }
-
-// Make sure the session is written even if a later fatal occurs
-if (session_status() === PHP_SESSION_ACTIVE) {
-    session_write_close();
-    // Re-open so the rest of the request can still use $_SESSION if needed
-    session_start();
-}

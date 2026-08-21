@@ -11,7 +11,7 @@
     <title>WORD-LEarn Platform</title>
     <link rel="stylesheet" href="assets/css/word-learn.css?v=<?= CSS_VERSION ?>">
 </head>
-<body>
+<body<?= !empty($_SESSION['solve_solved']) ? ' data-solved="1"' : '' ?>>
 
 <header>
     <h1>WORD-LEarn</h1>
