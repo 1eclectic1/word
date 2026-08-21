@@ -17,21 +17,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['current-guess'])) {
 }
 
 // 2. Commit Telemetry if matches terminate
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['record_game_telemetry'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST'
+    && isset($_POST['record_game_telemetry'])
+    && $_POST['record_game_telemetry'] === '1') {   // ← require the explicit "1"
+
     $telSecret = strtolower(trim($_POST['secret_word'] ?? ''));
     $gameOutcome = (($_POST['outcome'] ?? '') === 'win') ? 'win' : 'loss';
     $turnsTaken = ($gameOutcome === 'win') ? (int)($_POST['turns_taken'] ?? 0) : 0;
-    
+
     if (strlen($telSecret) === 5) {
         try {
             $db = new PDO('sqlite:' . __DIR__ . '/../data/telemetry.sqlite');
             $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $stmt = $db->prepare("INSERT INTO game_history (cookie_uid, secret_word, outcome, turns_taken) VALUES (?, ?, ?, ?)");
+            $stmt = $db->prepare(
+                "INSERT INTO game_history (cookie_uid, secret_word, outcome, turns_taken) VALUES (?, ?, ?, ?)"
+            );
             $stmt->execute([$userUid, $telSecret, $gameOutcome, $turnsTaken]);
-            compile_telemetry_analytics($userUid); // Refresh state arrays
+            compile_telemetry_analytics($userUid);
         } catch (PDOException $e) {
             $dbError = $e->getMessage();
         }
     }
 }
-

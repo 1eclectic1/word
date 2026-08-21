@@ -217,20 +217,23 @@ function submitIfComplete() {
         currentGuessInput.value = word;
     }
 
-    // Telemetry (only relevant for learn mode, harmless in solve)
-    const secretElement = document.getElementById('secret-word-display');
-    const secretWord = secretElement ? secretElement.textContent.trim().toLowerCase() : '';
-    const turnsCount = (document.querySelectorAll('.word-row .letter-box[readonly]').length / 5) + 1;
+    // Telemetry – ONLY in Learn mode
+    const currentMode = new URLSearchParams(window.location.search).get('mode') || 'learn';
+    if (currentMode === 'learn') {
+        const secretElement = document.getElementById('secret-word-display');
+        const secretWord = secretElement ? secretElement.textContent.trim().toLowerCase() : '';
+        const turnsCount = (document.querySelectorAll('.word-row .letter-box[readonly]').length / 5) + 1;
 
-    if (secretWord && secretWord.length === 5) {
-        if (word === secretWord) {
-            injectTelemetryFields(secretWord, 'win', turnsCount);
-        } else if (turnsCount === 6) {
-            injectTelemetryFields(secretWord, 'loss', 0);
+        if (secretWord && secretWord.length === 5) {
+            if (word === secretWord) {
+                injectTelemetryFields(secretWord, 'win', turnsCount);
+            } else if (turnsCount === 6) {
+                injectTelemetryFields(secretWord, 'loss', 0);
+            }
         }
     }
 
-    form.submit();
+    form.submit();   // ← this stays
 }
 
 function injectTelemetryFields(secret, outcome, turns) {
