@@ -17,21 +17,33 @@ $previousMode = $_SESSION['word_learn_mode'] ?? 'learn';
 $mode = $previousMode;
 
 if (isset($_GET['mode'])) {
-    $mode = trim($_GET['mode']);
-    $_SESSION['word_learn_mode'] = $mode;
+    $requestedMode = trim($_GET['mode']);
     
-    // AUTOMATIC GAME RESTART GUARD:
-    // If transitioning specifically from learn mode to solve mode, trigger a clean slate reset
-    if ($previousMode === 'learn' && $mode === 'solve') {
-        $_SESSION['history'] = [];
-        $_SESSION['word_learn_greens'] = '.....';
-        $_SESSION['word_learn_yellows'] = ['', '', '', '', ''];
-        $_SESSION['word_learn_grays'] = '';
-        unset($_SESSION['word_learn_secret']);
+    // Only treat it as a mode change when the value is actually different
+    if ($requestedMode !== $previousMode) {
+        $_SESSION['word_learn_mode'] = $requestedMode;
+        $mode = $requestedMode;
         
-        // Refresh page to guarantee clean state registers across view templates
-        header('Location: index.php?mode=solve');
-        exit;
+        // Clean slate ONLY when switching from learn → solve
+        // and only on a GET request (never on a form POST)
+        if ($previousMode === 'learn' 
+            && $requestedMode === 'solve' 
+            && $_SERVER['REQUEST_METHOD'] === 'GET') {
+            
+            $_SESSION['history'] = [];
+            $_SESSION['word_learn_greens'] = '.....';
+            $_SESSION['word_learn_yellows'] = ['', '', '', '', ''];
+            $_SESSION['word_learn_grays'] = '';
+            unset($_SESSION['word_learn_secret']);
+            
+            // Optional hard refresh to guarantee clean state
+            header('Location: index.php?mode=solve');
+            exit;
+        }
+    } else {
+        // Same mode – just make sure the variable is set
+        $mode = $requestedMode;
+        $_SESSION['word_learn_mode'] = $requestedMode;
     }
 }
 

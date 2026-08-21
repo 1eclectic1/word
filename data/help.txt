@@ -1,0 +1,61 @@
+Welcome to the WORD-LEarn Platform. This tool is designed to help you build vocabulary and solve Wordle-style puzzles with data-driven suggestions.<p>
+NOTE:  This website is under HEAVY construction and may experience periods of downtime or strange failures.  Please just try again later if that happens.
+
+<p>
+HOW TO PLAY
+
+<p>
+Learn Mode
+- The system secretly chooses a 5-letter word.
+<p>
+- Type your guess using your keyboard or the on-screen keyboard.
+- Press Enter or click the "Try" button.
+- Green = correct letter in the correct position.
+- Yellow = correct letter in the wrong position.
+- Gray = letter is not in the word.
+- You have 6 attempts. After the final attempt the secret word is revealed if you have not solved it.
+
+<p>
+Solver Mode
+<p>
+- Enter any guesses you have already made.
+- Click each letter box to cycle its color: Gray → Green → Yellow.
+- Click "Evaluate" to receive ranked suggestions based on the current board state.
+- The engine will highlight high-value separator words when many possibilities remain.
+
+<p>
+ON-SCREEN KEYBOARD
+- Tap letters to fill the current row.
+- Use ⌫ to delete the last letter.
+- Use ENTER to submit the current guess (same as the Try/Evaluate button).
+
+<p>
+TIPS
+- In Learn Mode the recommendations update after every valid guess.
+- In Solver Mode make sure you set the letter colors before evaluating.
+- The "Restart Game" button clears the current session and starts fresh.
+- Switch between Learn Mode, Solver Mode, and this Help Guide at any time using the top navigation.
+
+<p>
+SYSTEM RELEASE NOTES
+<p>
+v2.1.0
+<p>
+1. Added button to toggle suggestions on and off.
+<p>
+
+v2.0.0
+<p>
+1. Complete rewrite and reorganization of the entire codebase into a clean modular structure (config, engine, views, assets).
+2. Separated CSS into logical component files and introduced CSS custom properties for easier theming.
+3. Extracted all client-side logic into a dedicated JavaScript file.
+4. Fixed Help mode rendering and improved overall layout stability.
+5. Retained and refined the automated trap-detection system and endgame solutions-only filter.
+<p>
+
+v1.2.0
+<p>
+1. Deployed an automated trap-detection framework to identify dangerous letter families (for example -IGHT or -ATCH) early and route high-value separator suggestions.
+2. Integrated an endgame solutions-only filter for rows 5 and 6 to maximize win preservation.
+3. Adjusted layout constraints to resolve horizontal shifting on mobile devices.
+4. Added Help system and on-screen keyboard.

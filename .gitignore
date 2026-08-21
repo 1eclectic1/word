@@ -6,8 +6,3 @@ backup/
 
 # Ignore core OS file tags
 .DS_Store
-
-# temp hide rank engine
-src/word-learn-engine.php
-data/
-
