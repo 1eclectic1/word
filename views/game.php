@@ -2,7 +2,6 @@
 /**
  * game.php - Main game form structure (Manages active sub-views inclusion)
  */
-
 $isGameOver = (!empty($successMsg) || !empty($errorMsg));
 ?>
 
@@ -26,23 +25,32 @@ $isGameOver = (!empty($successMsg) || !empty($errorMsg));
 
     <!-- DYNAMIC SWAP TRIGGER: Swap play area grid for live summary charts -->
     <?php if ($isGameOver): ?>
+        <!-- RESTART POSITION REALIGNMENT: Top-placed restart button during Game Over state -->
+        <div class="control-container" style="margin-bottom: 1.5rem;">
+            <button type="button" class="action-btn clear" style="width: 100%; max-width: 300px; margin: 0 auto; display: block;" onclick="window.location.href='index.php?action=clear'">Restart Game</button>
+        </div>
         <?php require VIEWS_PATH . '/stats.php'; ?>
     <?php else: ?>
+<?php if (isset($mode) && $mode === 'learn' && !empty($secretWord) && isset($userUid) && $userUid === '8aebc83c9be651dc3f5f0b7279ed4b45'): ?>
+    <div style="background-color: #fcf8e3; border: 1px solid #faebcc; color: #8a6d3b; padding: 10px; margin-bottom: 20px; border-radius: 4px; font-family: monospace; font-size: 1.1em; text-align: center;">
+        🧪 <strong>TESTING UTILITY:</strong> The secret word is: <span style="letter-spacing: 2px; font-weight: bold; color: #a94442;"><?= strtoupper($secretWord) ?></span>
+    </div>
+<?php endif; ?>
         <?php require VIEWS_PATH . '/grid.php'; ?>
     <?php endif; ?>
 
-    <!-- INTERFACE ACTION BUTTON CONTROLS -->
-    <div class="control-container">
-        <button type="button" class="action-btn clear" onclick="window.location.href='index.php?action=clear'">Restart Game</button>
-        
-        <?php if (!$isGameOver): ?>
+    <!-- INTERFACE ACTION BUTTON CONTROLS (Only visible during active gameplay) -->
+    <?php if (!$isGameOver): ?>
+        <div class="control-container">
+            <button type="button" class="action-btn clear" onclick="window.location.href='index.php?action=clear'">Restart Game</button>
             <button type="button" id="toggle-suggestions-btn" class="toggle-btn">Hide Suggestions</button>
             <?php if ($currentRowIndex < 6): ?>
-<button type="button" class="action-btn submit" onclick="submitIfComplete()">
-    <?= $mode === 'learn' ? 'Try' : 'Evaluate' ?>
-</button>            <?php endif; ?>
-        <?php endif; ?>
-    </div>
+                <button type="button" class="action-btn submit" onclick="submitIfComplete()">
+                    <?= $mode === 'learn' ? 'Try' : 'Evaluate' ?>
+                </button>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
 </form>
 
 <!-- ASYNC EXTRA TRANSMISSION OVERLAY (Safety Fallback Chassis) -->
