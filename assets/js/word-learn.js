@@ -1,17 +1,17 @@
 /**
  * word-learn.js - Client-side interaction logic
+ * (Telemetry completely removed – now handled server-side)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // If the server marked the puzzle solved, lock the UI
     if (document.body.dataset.solved === '1') {
-        // nothing more to do – grid.php already made rows non-editable
+        // board already locked by PHP
     }
 
     const form = document.getElementById('wordle-form');
-    if (!form) return; // Help mode has no form
+    if (!form) return;
 
-    // Always force the current guess into the hidden field before any submit
+    // Guard any native submit
     form.addEventListener('submit', (e) => {
         const word = syncCurrentGuess();
         if (word.length !== 5) {
@@ -21,27 +21,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (document.body.dataset.solved === '1') {
             e.preventDefault();
-            return;
         }
     });
 
     const rows = document.querySelectorAll('.word-row');
-    const activeRowIndex = Array.from(rows).findIndex(row => {
-        return row.querySelector('.letter-box:not([readonly])') !== null;
-    });
-
-    const currentMode = new URLSearchParams(window.location.search).get('mode') || 'learn';
+    const activeRowIndex = Array.from(rows).findIndex(row =>
+        row.querySelector('.letter-box:not([readonly])') !== null
+    );
 
     if (activeRowIndex === -1 || activeRowIndex >= 6) return;
 
     const inputs = rows[activeRowIndex].querySelectorAll('.letter-box');
 
-    // Focus first empty box on load (only for first row)
+    // Focus first empty box
     if (inputs.length > 0 && activeRowIndex === 0) {
         inputs[0].focus();
     }
 
-    // ---------- Physical keyboard ----------
+    // Physical keyboard
     inputs.forEach((input, index) => {
         input.addEventListener('input', (e) => {
             if (e.target.value.length >= 1) {
@@ -50,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     inputs[index + 1].focus();
                 }
             }
-            syncLearnHiddenField();
         });
 
         input.addEventListener('keydown', (e) => {
@@ -61,17 +57,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     e.preventDefault();
                 }
             }
-
             if (e.key === 'Enter') {
                 e.preventDefault();
                 submitIfComplete();
             }
-
-            syncLearnHiddenField();
         });
     });
 
-    // ---------- Virtual keyboard ----------
+    // Virtual keyboard
     document.querySelectorAll('.key').forEach(keyButton => {
         keyButton.addEventListener('click', (e) => {
             e.preventDefault();
@@ -85,7 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         break;
                     }
                 }
-                syncLearnHiddenField();
                 return;
             }
 
@@ -105,17 +97,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     break;
                 }
             }
-            syncLearnHiddenField();
         });
     });
 
-    // ---------- Solver mode: cycle colors ----------
+    // Solver mode: cycle colors
     document.body.addEventListener('click', (e) => {
         if (e.target.matches('.letter-box[data-clickable="true"]')) {
             const box = e.target;
             const r = box.getAttribute('data-row');
             const c = box.getAttribute('data-col');
             const hidden = document.getElementById(`color-${r}-${c}`);
+            if (!hidden) return;
 
             const cycle = ['gray', 'green', 'yellow'];
             let currentIdx = cycle.indexOf(hidden.value);
@@ -128,13 +120,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ---------- Suggestions Visibility Toggle ----------
+    // Suggestions toggle
     const toggleBtn = document.getElementById('toggle-suggestions-btn');
     const predictionsContent = document.getElementById('predictions-content');
 
     if (toggleBtn && predictionsContent) {
         const isHidden = localStorage.getItem('hideSuggestions') === 'true';
-
         if (isHidden) {
             predictionsContent.style.display = 'none';
             toggleBtn.textContent = 'Show Suggestions';
@@ -143,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         toggleBtn.addEventListener('click', () => {
             const currentlyHidden = predictionsContent.style.display === 'none';
-
             if (currentlyHidden) {
                 predictionsContent.style.display = 'block';
                 toggleBtn.textContent = 'Hide Suggestions';
@@ -158,27 +148,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Auto-scroll to suggestions on later rows
+    // Auto-scroll to suggestions
     const panel = document.getElementById('predictions');
     if (panel && activeRowIndex > 0 && localStorage.getItem('hideSuggestions') !== 'true') {
         setTimeout(() => {
             panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }, 100);
     }
+});
 
-    // Legacy helper still used by some keyboard paths
-    function syncLearnHiddenField() {
-        if (currentMode !== 'learn') return;
-        let word = '';
-        inputs.forEach(i => word += i.value);
-        const hidden = document.getElementById('current-guess');
-        if (hidden) hidden.value = word;
-    }
-}); // end DOMContentLoaded
-
-// =====================================================================
-// GLOBAL HELPERS – required by the Evaluate button (onclick)
-// =====================================================================
+// ===== GLOBAL HELPERS =====
 
 function syncCurrentGuess() {
     const activeRow = document.querySelector('.word-row .letter-box:not([readonly])')?.closest('.word-row');
@@ -188,11 +167,7 @@ function syncCurrentGuess() {
     activeRow.querySelectorAll('.letter-box').forEach(box => {
         word += (box.value || '').trim().toUpperCase();
     });
-    word = word.toLowerCase();
-
-    const hidden = document.getElementById('current-guess');
-    if (hidden) hidden.value = word;
-    return word;
+    return word.toLowerCase();
 }
 
 function submitIfComplete() {
@@ -217,36 +192,9 @@ function submitIfComplete() {
         currentGuessInput.value = word;
     }
 
-// Telemetry – ONLY in Learn mode, and only once per finished game
-const currentMode = new URLSearchParams(window.location.search).get('mode') || 'learn';
-if (currentMode === 'learn') {
-    // Remove any previously injected telemetry fields so they cannot be re-sent
-    form.querySelectorAll('input[name="record_game_telemetry"], input[name="secret_word"], input[name="outcome"], input[name="turns_taken"]').forEach(el => {
-        // Keep the original permanent hidden fields that have empty/0 values
-        if (el.value === '' || el.value === '0') return;
-        el.remove();
-    });
-
-    const secretElement = document.getElementById('secret-word-display');
-    const secretWord = secretElement ? secretElement.textContent.trim().toLowerCase() : '';
-
-    // Count how many rows already have letters (completed turns)
-    const completedRows = document.querySelectorAll('.word-row .letter-box[readonly]').length / 5;
-    const turnsCount = Math.floor(completedRows) + 1;
-
-    if (secretWord && secretWord.length === 5) {
-        if (word === secretWord) {
-            injectTelemetryFields(secretWord, 'win', turnsCount);
-        } else if (turnsCount >= 6) {
-            injectTelemetryFields(secretWord, 'loss', 0);
-        }
-    }
+    form.submit();
 }
 
-    form.submit();   // ← this stays
-}
-
-// Global reset helper (called from button)
 function triggerReset() {
     const actionInput = document.getElementById('form-action');
     if (actionInput) {
@@ -255,3 +203,4 @@ function triggerReset() {
     const form = document.getElementById('wordle-form');
     if (form) form.submit();
 }
+
