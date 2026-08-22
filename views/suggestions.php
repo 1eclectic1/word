@@ -20,34 +20,37 @@ $totalLeft = count($answers);
     <div id="predictions-content">
         <h3>Suggestions</h3>
         <div class="columns-wrapper">
-            
+
             <!-- Column 1: Best probes -->
             <div class="suggestion-column">
                 <div class="column-header">Best Probes</div>
-                <?php foreach ($topProbes as $word => $score): ?>
-                    <div class="suggestion-row">
-                        <span class="word-text"><?= htmlspecialchars($word) ?></span>
-                        <span class="word-score">(<?= $score ?>)</span>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-
-            <!-- Column 2: Possible answers only -->
-            <div class="suggestion-column">
-                <div class="column-header">Possible Answers</div>
-                <?php foreach ($topAnswers as $word => $score): ?>
-                    <div class="suggestion-row">
-                        <span class="word-text"><?= htmlspecialchars($word) ?></span>
-                        <span class="word-score">(<?= $score ?>)</span>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-
-        </div>
-        <div class="summary-text">
-            Total possible remaining words: <?= $totalLeft ?>
-        </div>
+<!-- Example layout snippet for Column 1 Probes inside views/suggestions.php -->
+<?php foreach ($recommendations['probes'] as $word => $score): ?>
+    <div class="suggestion-item">
+        <span class="suggested-word"><?= strtoupper($word)   ?></span>
+        <span class="score-badge"> <?= round($score, 1) ?>%</span>
     </div>
+<?php endforeach; ?>
+   </div>
+
+   <!-- Column 2: Possible answers only -->
+   <div class="suggestion-column">
+   <div class="column-header">Possible Answers</div>
+
+<!-- Identical layout setup for Column 2 Answers -->
+<?php foreach ($recommendations['answers'] as $word => $score): ?>
+    <div class="suggestion-item">
+        <span class="suggested-word"><?= strtoupper($word)   ?></span>
+        <span class="score-badge"> <?= round($score, 1) ?>%</span>
+    </div>
+<?php endforeach; ?>
 </div>
-<?php endif; ?>
+
+   </div>
+   <div class="summary-text">
+   Total possible remaining words: <?= $totalLeft ?>
+   </div>
+   </div>
+   </div>
+   <?php endif; ?>
 
