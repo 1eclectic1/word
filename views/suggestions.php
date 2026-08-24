@@ -6,8 +6,9 @@
  */
 
 // Handle safe variable extraction mapping
-$probes = $recommendations['probes'] ?? [];
-$answers = $recommendations['answers'] ?? [];
+$probes     = $recommendations['probes'] ?? [];
+$answers    = $recommendations['answers'] ?? [];
+$totalLeft  = $recommendations['totalLeft'] ?? count($answers);
 
 $topProbes = array_slice($probes, 0, 15, true);
 $topAnswers = array_slice($answers, 0, 15, true);

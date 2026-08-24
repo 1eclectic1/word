@@ -51,7 +51,7 @@ class WordLearnEngine {
         // Slices the top 15 results while preserving both the keys (words) and values (scores)
         return [
             'probes'  => array_slice($col1Probes, 0, 15, true),
-            'answers' => array_slice($col2Candidates, 0, 15, true)
+            'answers' => array_slice($col2Candidates, 0, 15, true),
             'totalLeft' => count($col2Candidates)
         ];
     }
