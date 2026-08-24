@@ -67,42 +67,6 @@ function init_wordle_platform(): WordLearnEngine {
     return new WordLearnEngine(__DIR__ . '/../data/wordle.txt');
 }
 
-function compile_telemetry_analytics(string $userUid): void {
-    global $userDistribution, $maxCount, $totalUserGames, $totalUserWins, $globalTotalGames, $globalTotalWins, $dbError;
-    $dbPath = __DIR__ . '/../data/telemetry.sqlite';
-    try {
-        $db = new PDO('sqlite:' . $dbPath);
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        
-        $stmt = $db->prepare("SELECT outcome, turns_taken, COUNT(*) as qty FROM game_history WHERE cookie_uid = ? GROUP BY outcome, turns_taken");
-        $stmt->execute([$userUid]);
-        $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        foreach ($userRows as $row) {
-            $qty = (int)$row['qty'];
-            if ($row['outcome'] === 'loss') {
-                $userDistribution['loss'] += $qty;
-            } else {
-                $turnNum = (int)$row['turns_taken'];
-                if ($turnNum >= 1 && $turnNum <= 6) {
-                    $userDistribution[$turnNum] = $qty;
-                    $totalUserWins += $qty;
-                }
-            }
-            $totalUserGames += $qty;
-            if ($qty > $maxCount) { $maxCount = $qty; }
-        }
-        
-        $globalRows = $db->query("SELECT outcome, COUNT(*) as qty FROM game_history GROUP BY outcome")->fetchAll(PDO::FETCH_ASSOC);
-        foreach ($globalRows as $row) {
-            $qty = (int)$row['qty'];
-            if ($row['outcome'] === 'win') { $globalTotalWins += $qty; }
-            $globalTotalGames += $qty;
-        }
-    } catch (PDOException $e) {
-        $dbError = $e->getMessage();
-    }
-}
 
 function process_board_colors(string $incomingGuess, string $secretWord): void {
     $currentHint = array_fill(0, 5, 'gray');
@@ -150,13 +114,69 @@ function process_board_colors(string $incomingGuess, string $secretWord): void {
     $_SESSION['word_learn_greens'] = implode('', $greens);
     $_SESSION['word_learn_yellows'] = $yellows; $_SESSION['word_learn_grays'] = $grays;
 }
+
+function compile_telemetry_analytics(string $userUid): void {
+    global $userDistribution, $maxCount, $totalUserGames, $totalUserWins, $globalTotalGames, $globalTotalWins, $dbError;
+
+    // Always start from a clean slate so this function is idempotent
+    $userDistribution = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 'loss' => 0];
+    $maxCount = 1;
+    $totalUserGames = 0;
+    $totalUserWins = 0;
+    $globalTotalGames = 0;
+    $globalTotalWins = 0;
+
+    $dbPath = __DIR__ . '/../data/telemetry.sqlite';
+    try {
+        $db = new PDO('sqlite:' . $dbPath);
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $stmt = $db->prepare(
+            "SELECT outcome, turns_taken, COUNT(*) as qty FROM game_history WHERE cookie_uid = ? GROUP BY outcome, turns_taken"
+        );
+        $stmt->execute([$userUid]);
+        $userRows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($userRows as $row) {
+            $qty = (int)$row['qty'];
+            if ($row['outcome'] === 'loss') {
+                $userDistribution['loss'] += $qty;
+            } else {
+                $turnNum = (int)$row['turns_taken'];
+                if ($turnNum >= 1 && $turnNum <= 6) {
+                    $userDistribution[$turnNum] = $qty;
+                    $totalUserWins += $qty;
+                }
+            }
+            $totalUserGames += $qty;
+            if ($qty > $maxCount) {
+                $maxCount = $qty;
+            }
+        }
+
+        $globalRows = $db->query(
+            "SELECT outcome, COUNT(*) as qty FROM game_history GROUP BY outcome"
+        )->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($globalRows as $row) {
+            $qty = (int)$row['qty'];
+            if ($row['outcome'] === 'win') {
+                $globalTotalWins += $qty;
+            }
+            $globalTotalGames += $qty;
+        }
+    } catch (PDOException $e) {
+        $dbError = $e->getMessage();
+    }
+}
 function record_game_telemetry(string $userUid, string $secret, string $outcome, int $turnsTaken): void {
     global $dbError;
+
     // Never record the same secret twice for this user
     try {
         $db = new PDO('sqlite:' . __DIR__ . '/../data/telemetry.sqlite');
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        
+
         $check = $db->prepare(
             "SELECT COUNT(*) FROM game_history WHERE cookie_uid = ? AND secret_word = ?"
         );
@@ -164,15 +184,13 @@ function record_game_telemetry(string $userUid, string $secret, string $outcome,
         if ((int)$check->fetchColumn() > 0) {
             return; // already recorded
         }
-        
+
         $stmt = $db->prepare(
             "INSERT INTO game_history (cookie_uid, secret_word, outcome, turns_taken) VALUES (?, ?, ?, ?)"
         );
         $stmt->execute([$userUid, $secret, $outcome, $turnsTaken]);
 
-        // CRUCIAL SYNC FIX: Immediately recalculate global statistical metrics
-        // after a new database write completes. This ensures the text elements inside
-        // views/stats.php align perfectly with the updated chart bars on this frame.
+        // Refresh the in-memory stats so the current page shows the new numbers
         compile_telemetry_analytics($userUid);
 
     } catch (PDOException $e) {

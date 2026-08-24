@@ -52,6 +52,7 @@ class WordLearnEngine {
         return [
             'probes'  => array_slice($col1Probes, 0, 15, true),
             'answers' => array_slice($col2Candidates, 0, 15, true)
+            'totalLeft' => count($col2Candidates)
         ];
     }
 }

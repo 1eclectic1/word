@@ -11,7 +11,6 @@ $answers = $recommendations['answers'] ?? [];
 
 $topProbes = array_slice($probes, 0, 15, true);
 $topAnswers = array_slice($answers, 0, 15, true);
-$totalLeft = count($answers);
 ?>
 
 <!-- Wrap in a conditional block instead of using 'return' to prevent page compilation crashes -->

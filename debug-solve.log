@@ -1,3 +1,33 @@
 08:52:50 POST received. guess=[drawn]  history-before=0
 08:52:50 colors for turn 0 = gray,gray,gray,yellow,gray
 08:52:50 SUCCESS. history-after=1
+14:23:19 POST received. guess=[NULL]  history-before=0
+14:23:20 POST received. guess=[NULL]  history-before=0
+14:23:22 POST received. guess=[NULL]  history-before=0
+14:30:16 POST received. guess=[NULL]  history-before=0
+06:15:48 POST received. guess=[NULL]  history-before=0
+06:16:00 POST received. guess=[arose]  history-before=0
+06:16:00 colors for turn 0 = gray,gray,yellow,gray,yellow
+06:16:00 SUCCESS. history-after=1
+06:17:46 POST received. guess=[piley]  history-before=1
+06:17:46 colors for turn 1 = gray,gray,yellow,green,gray
+06:17:46 SUCCESS. history-after=2
+06:19:03 POST received. guess=[bouge]  history-before=2
+06:19:03 colors for turn 2 = gray,yellow,gray,gray,yellow
+06:19:03 SUCCESS. history-after=3
+06:51:22 POST received. guess=[bouge]  history-before=0
+06:51:22 colors for turn 0 = gray,gray,yellow,gray,yellow
+06:51:22 SUCCESS. history-after=1
+06:51:23 POST received. guess=[NULL]  history-before=0
+06:51:23 POST received. guess=[NULL]  history-before=0
+06:26:56 POST received. guess=[NULL]  history-before=0
+06:27:12 POST received. guess=[arise]  history-before=0
+06:27:12 colors for turn 0 = gray,yellow,gray,gray,gray
+06:27:12 SUCCESS. history-after=1
+06:28:10 POST received. guess=[jonty]  history-before=1
+06:28:10 colors for turn 1 = gray,gray,green,gray,green
+06:28:10 SUCCESS. history-after=2
+08:35:59 POST received. guess=[jonty]  history-before=0
+08:35:59 colors for turn 0 = gray,yellow,gray,gray,gray
+08:35:59 SUCCESS. history-after=1
+08:36:04 POST received. guess=[NULL]  history-before=0
