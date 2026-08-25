@@ -36,7 +36,6 @@ class WordLearnEngine {
     public function compileWordListPercentages(array $wordsSource, array &$resultMatrix): bool {
         return engine_compile_percentages($wordsSource, $resultMatrix);
     }
-
     public function evaluateBoard(string $greenPattern, array $yellowSlots, string $grayString, int $turnsRemaining): array {
         $green = strtolower(trim($greenPattern));
         $grays = strtolower(trim($grayString));
@@ -48,12 +47,11 @@ class WordLearnEngine {
         // 2. Core Column 1 Pipeline
         $col1Probes = engine_build_column1($this->dictionary, $col2Candidates, $this->globalPercentages, $green, $yellows, $grays, $turnsRemaining);
 
-        // Slices the top 15 results while preserving both the keys (words) and values (scores)
+        // FIX: Return the full complete evaluation matrices to support deep benchmark harness testing
         return [
-            'probes'  => array_slice($col1Probes, 0, 15, true),
-            'answers' => array_slice($col2Candidates, 0, 15, true),
+            'probes'    => $col1Probes,
+            'answers'   => $col2Candidates,
             'totalLeft' => count($col2Candidates)
         ];
     }
 }
-

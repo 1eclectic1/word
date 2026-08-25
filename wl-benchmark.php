@@ -68,7 +68,7 @@ function runSimulation(WordLearnEngine $engine, array $wordList, string $strateg
             $matrix = $engine->evaluateBoard($greenPattern, $yellowSlots, $grayString, $turnsRemaining);
 
             if ($turnsSpent === 1) {
-                $chosenWord = 'trace'; // Standard global statistical opener text string
+                $chosenWord = 'slate'; // Standard global statistical opener text string
             } else {
                 // Safely extract associative array keys from the isolated strategy block
                 $chosenWord = (!empty($matrix[$strategy])) 

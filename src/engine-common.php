@@ -43,12 +43,14 @@ function engine_compile_percentages(array $wordsSource, array &$resultMatrix): b
  * Boolean verification helper that manages Wordle matching pattern matrices.
  */
 function engine_fits_constraints(string $word, string $greenPattern, array $yellowSlots, string $grayString): bool {
+    // 1. Validate Green Positional Constraints
     for ($i = 0; $i < 5; $i++) {
         if ($greenPattern[$i] !== '.' && $word[$i] !== $greenPattern[$i]) {
             return false;
         }
     }
 
+    // 2. Validate Gray Excluded Constraints (Accounting for duplicate letters)
     for ($i = 0; $i < 5; $i++) {
         $char = $word[$i];
         if (str_contains($grayString, $char)) {
@@ -60,15 +62,29 @@ function engine_fits_constraints(string $word, string $greenPattern, array $yell
         }
     }
 
+    // 3. Validate Yellow Positional & Presence Constraints
     for ($i = 0; $i < 5; $i++) {
-        $yellowLetters = $yellowSlots[$i];
-        if (!empty($yellowLetters)) {
-            if (str_contains($yellowLetters, $word[$i])) return false;
-            foreach (str_split($yellowLetters) as $yChar) {
-                if (!str_contains($word, $yChar)) return false;
+        $yellowLetters = $yellowSlots[$i] ?? '';
+
+        // Strip out any structural padding or dot placeholders safely
+        $yellowLetters = str_replace('.', '', $yellowLetters);
+        if ($yellowLetters === '') {
+            continue;
+        }
+
+        // Rule out words where a known yellow letter is placed in the exact same slot
+        if (str_contains($yellowLetters, $word[$i])) {
+            return false;
+        }
+
+        // Guarantee that every discovered yellow letter exists SOMEWHERE in the candidate word
+        foreach (str_split($yellowLetters) as $yChar) {
+            if (ctype_alpha($yChar) && !str_contains($word, $yChar)) {
+                return false;
             }
         }
     }
+
     return true;
 }
 

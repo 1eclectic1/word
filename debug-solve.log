@@ -33,3 +33,11 @@
 08:36:04 POST received. guess=[NULL]  history-before=0
 14:32:30 POST received. guess=[NULL]  history-before=0
 19:05:02 POST received. guess=[NULL]  history-before=0
+05:43:03 POST received. guess=[NULL]  history-before=0
+05:43:06 POST received. guess=[NULL]  history-before=0
+05:46:20 POST received. guess=[slate]  history-before=0
+05:46:20 colors for turn 0 = gray,green,gray,gray,gray
+05:46:20 SUCCESS. history-after=1
+05:47:44 POST received. guess=[corky]  history-before=1
+05:47:44 colors for turn 1 = green,gray,gray,yellow,gray
+05:47:44 SUCCESS. history-after=2
